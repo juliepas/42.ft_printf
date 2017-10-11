@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memalloc.c                                      :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpascal <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/14 23:03:38 by jpascal           #+#    #+#             */
-/*   Updated: 2016/11/17 03:19:57 by jpascal          ###   ########.fr       */
+/*   Created: 2016/11/10 17:20:05 by jpascal           #+#    #+#             */
+/*   Updated: 2016/11/24 01:40:34 by jpascal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
+#include "libft.h"
 
-void	*ft_memalloc(size_t size)
+char	*ft_strncpy(char *dest, const char *src, size_t n)
 {
-	void	*viod;
+	unsigned int	i;
 
-	if (!(viod = (void*)malloc(size)))
-		return (0);
-	ft_bzero(viod, size);
-	return (viod);
+	i = 0;
+	while (src[i] && i < n)
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	if (!(src[i]))
+	{
+		while (i < n)
+		{
+			dest[i] = '\0';
+			i++;
+		}
+	}
+	return (dest);
 }

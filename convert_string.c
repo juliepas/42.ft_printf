@@ -1,90 +1,102 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   convert_string.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jpascal <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/08/10 18:13:34 by jpascal           #+#    #+#             */
+/*   Updated: 2017/08/10 18:13:35 by jpascal          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libftprintf.h"
 
-void	is_string(t_conv **tamp, char *argument) 
+int				ii(t_conv *tmp, int lenarg)
 {
-	t_conv	*tmp;
-	int i;
+	int			i;
 
-	tmp = *tamp;
 	i = 0;
-	if (argument == NULL)
-		argument = "(null)";
-	if (tmp->largeur != 0 && (tmp->largeur > tmp->precision
-		|| tmp->largeur >= ft_strlen(argument))) 
-	{
-		longueur_de_champ(&tmp);
-		if (tmp->attributs[2] == 0)
-		{
-			if (tmp->precision > 0 &&
-				tmp->precision < ft_strlen(argument))
-				i = ft_strlen(tmp->data) - tmp->precision;
-			else if (tmp->precision == -1)
-				i = tmp->precision;
-			else
-				i = ft_strlen(tmp->data) - ft_strlen(argument);
-		}
-	}
-	else if (tmp->precision < (int)ft_strlen(argument))
-		tmp->data = ft_strnew(tmp->precision + 1);
+	if (tmp->precision > 0 && tmp->precision < lenarg)
+		i = ft_strlen(tmp->data) - tmp->precision;
 	else
-		tmp->data = ft_memalloc(ft_strlen(argument));
-	precision_str(&tmp, argument, i);
+		i = (tmp->precision == -1) ? tmp->precision :
+			ft_strlen(tmp->data) - lenarg;
+	return (i);
 }
 
-char	*conversion_S(t_conv **tamp, wchar_t *argument)
+void			is_string(t_conv **tamp, char *argument)
 {
-	t_conv *tmp;
-	int i;
-	char *str;
+	t_conv		*tmp;
+	int			i;
 
 	tmp = *tamp;
 	i = 0;
-	if (argument == NULL)
-	{
-		str = ft_strdup("(null)");
-		return(str);
-	}
-	else if (argument[i] == '\0')
-		return(NULL);
-	str = ft_strdup(conversion_C(&tmp, argument[i]));
-	i += 1;
-	while (argument[i])
-	{
-		str = ft_strjoin(str, conversion_C(&tmp, argument[i]));
-		i++;
-	}
-	return(str);
-}
-
-void	is_string_S(t_conv **tamp, wchar_t *argument) 
-{
-	t_conv	*tmp;
-	char *str;
-	int i;
-	int j;
-
-	tmp = *tamp;
-	i = 0;
-	str = conversion_S(&tmp, argument);
-	if (str != NULL)
+	argument = (argument == NULL) ? "(null)" : argument;
+	if (!(argument[i] == '\0' && tmp->attributs[4] == 1))
 	{
 		if (tmp->largeur != 0 && (tmp->largeur > tmp->precision
-		|| sizeof(tmp->largeur) >= sizeof(argument)))
+			|| tmp->largeur >= (int)ft_strlen(argument)))
 		{
 			longueur_de_champ(&tmp);
 			if (tmp->attributs[2] == 0)
-			{
-				if (tmp->precision > 0 && 
-					tmp->precision < (sizeof(argument)))
-					i = sizeof(argument) - sizeof(tmp->precision);
-				else if (tmp->precision == -1)
-					i = tmp->precision;
-				else
-					i = sizeof(tmp->data) - sizeof(argument);
-			}
+				i = ii(tmp, ft_strlen(argument));
 		}
 		else
-			tmp->data = ft_memalloc(sizeof(argument));
+			tmp->data = ft_memalloc(ft_strlen(argument) + 1);
+		precision_str(&tmp, argument, i);
+	}
+}
+
+char			*conversion_s(t_conv **tamp, wchar_t *argument)
+{
+	t_conv		*tmp;
+	int			i;
+	char		*str;
+	char		*str2;
+
+	str2 = NULL;
+	tmp = *tamp;
+	i = 0;
+	if ((char*)argument == NULL)
+	{
+		str = ft_strdup("(null)");
+		return (str);
+	}
+	else if (argument[i] == '\0')
+		return (NULL);
+	str2 = conversion_grand_c(&tmp, argument[i]);
+	str = ft_strdup(str2);
+	ft_strdel(&str2);
+	while (argument[++i])
+	{
+		str2 = conversion_grand_c(&tmp, argument[i]);
+		str = ft_strjoinfree(str, str2);
+		ft_strdel(&str2);
+	}
+	return (str);
+}
+
+void			is_string_s(t_conv **tamp, wchar_t *argument)
+{
+	t_conv		*tmp;
+	char		*str;
+	int			i;
+
+	tmp = *tamp;
+	i = 0;
+	str = conversion_s(&tmp, argument);
+	if (str != NULL)
+	{
+		if (tmp->largeur > tmp->precision
+			|| tmp->largeur >= (int)ft_strlen(str))
+		{
+			longueur_de_champ(&tmp);
+			if (tmp->attributs[2] == 0)
+				i = ii(tmp, ft_strlen(str));
+		}
+		else
+			tmp->data = ft_memalloc(ft_strlen(str));
 		precision_str(&tmp, str, i);
 	}
 	ft_strdel(&str);

@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   itoa_base_spe.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jpascal <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/08/10 18:14:07 by jpascal           #+#    #+#             */
+/*   Updated: 2017/08/10 18:14:08 by jpascal          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libftprintf.h"
 
-
-long int		ft_nbrlonglong(long long int n, int base)
+long int				ft_nbrlonglong(long long int n, int base)
 {
-	long long int i;
+	long long int		i;
 
 	i = 0;
 	if (n == 0)
@@ -21,17 +32,14 @@ long int		ft_nbrlonglong(long long int n, int base)
 	return (i);
 }
 
-char				*ft_itoabaselong(long long int n, int base)
+char					*ft_itoabaselong(long long int n, int base)
 {
-	char			*str;
-	long long int	i;
-	long long int	nb;
+	char				*str;
+	long long int		i;
+	long long int		nb;
 
 	if (n == LONG_MIN)
-	{
-		str = ft_strdup("-9223372036854775808");
-		return(str);
-	}
+		return (ft_strdup("-9223372036854775808"));
 	nb = n;
 	i = ft_nbrlonglong(nb, base);
 	str = ft_memalloc(i);
@@ -41,21 +49,20 @@ char				*ft_itoabaselong(long long int n, int base)
 		nb = -nb;
 	}
 	str[i] = '\0';
-	i -= 1;
 	if (nb == 0 || nb == -0)
-		str[i] = '0';
+		str[i - 1] = '0';
 	while (nb > 0)
 	{
-		str[i] = (nb % base <= 9) ? nb % base + '0' : ((nb % base) - 10) + 'a';
+		str[--i] = (nb % base <= 9) ?
+		nb % base + '0' : ((nb % base) - 10) + 'a';
 		nb = nb / base;
-		i--;
 	}
 	return (str);
 }
 
-short int		ft_nbrunsigned(unsigned long long int n, int base)
+int						ft_nbrunsigned(unsigned long long int n, int base)
 {
-	short int i;
+	int					i;
 
 	i = 0;
 	if (n == 0)
@@ -68,7 +75,7 @@ short int		ft_nbrunsigned(unsigned long long int n, int base)
 	return (i);
 }
 
-char				*ft_itoabaseunsigned(unsigned long long n, int base)
+char					*ft_itoabaseunsigned(unsigned long long n, int base)
 {
 	char				*str;
 	int					i;
@@ -76,8 +83,7 @@ char				*ft_itoabaseunsigned(unsigned long long n, int base)
 
 	nb = n;
 	i = ft_nbrunsigned(nb, base);
-	if (!(str = (char*)malloc(sizeof(char) * (i + 1))))
-		return (0);
+	str = ft_memalloc(i + 1);
 	str[i] = '\0';
 	i--;
 	if (nb == 0 || nb == -0)

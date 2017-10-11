@@ -80,9 +80,7 @@ SRC_NAME = ft_atoi.c \
 		   ft_strjoinchar.c \
 		   ft_putnbrendl.c \
 		   ft_strjoinfree.c \
-		   ft_strrev.c \
 		   ft_itoa_base.c \
-		   ft_strjoincharrev.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 

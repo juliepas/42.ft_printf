@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa_base.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jpascal <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/08/10 18:13:43 by jpascal           #+#    #+#             */
+/*   Updated: 2017/08/10 18:15:23 by jpascal          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-int		ft_nbrlongue(long n, int base)
+int					ft_nbrlongue(long n, int base)
 {
-	int i;
+	int				i;
 
 	i = 0;
 	if (n == 0)
@@ -23,8 +35,8 @@ int		ft_nbrlongue(long n, int base)
 char				*ft_itoa_base(int n, int base)
 {
 	char			*str;
-	int	i;
-	long int	nb;
+	int				i;
+	long int		nb;
 
 	nb = n;
 	i = ft_nbrlongue(nb, base);
@@ -35,17 +47,13 @@ char				*ft_itoa_base(int n, int base)
 		nb = -nb;
 	}
 	str[i] = '\0';
-	i--;
 	if (nb == 0 || nb == -0)
-		str[i] = '0';
+		str[i - 1] = '0';
 	while (nb > 0)
 	{
-		if (nb % base <= 9)
-			str[i] = nb % base + '0';
-		else
-			str[i] = ((nb % base) - 10) + 'a';
+		str[--i] = (nb % base <= 9) ?
+		nb % base + '0' : ((nb % base) - 10) + 'a';
 		nb = nb / base;
-		i--;
 	}
 	return (str);
 }

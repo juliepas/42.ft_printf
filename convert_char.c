@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   convert_char.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jpascal <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/08/10 18:12:55 by jpascal           #+#    #+#             */
+/*   Updated: 2017/08/10 18:12:57 by jpascal          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libftprintf.h"
 
-void		is_char(t_conv **tamp, int argument)
+void			is_char(t_conv **tamp, int argument)
 {
-	t_conv	*tmp;
-	int i;
+	t_conv		*tmp;
+	int			i;
 
 	tmp = *tamp;
 	i = 0;
@@ -16,73 +28,76 @@ void		is_char(t_conv **tamp, int argument)
 	else
 		tmp->data = ft_strnew(1);
 	tmp->data[i] = argument;
+	tmp->leng = ft_strlen(tmp->data);
+	if (argument == 0)
+		tmp->leng += 1;
 }
 
-int		longueur_wchart(wchar_t argument, int len)
+int				longueur_wchart(int len)
 {
-	int i;
-	
+	int			i;
+
 	i = 0;
 	if (len % 6 == 0)
 		i = len / 6;
 	else
 		i = len / 6 + 1;
-	return(i);
+	return (i);
 }
 
-char 	*conversion_C(t_conv **tamp, wchar_t argument)
+char			*conversion_grand_c(t_conv **tamp, wchar_t argument)
 {
-	t_conv *tmp;
-	int len;
-	int i;
-	char *str;
+	t_conv		*tmp;
+	int			len;
+	int			i;
+	char		*str;
 
 	tmp = *tamp;
 	len = ft_nbrlongue(argument, 2);
-	i = longueur_wchart(argument, len);
-	str = ft_memalloc(sizeof(wchar_t) * i);
+	i = longueur_wchart(len);
+	str = ft_memalloc(i);
+	str[i] = '\0';
 	if (len > 7)
 	{
-		str[i] = '\0';
-		while(i > 1)
+		while (--i > 0)
 		{
-			str[i - 1] = (argument & 0x3F);
-			str[i - 1] += 0x80;
+			str[i] = (argument & 0x3F);
+			str[i] += 0x80;
 			argument = argument >> 6;
-			i--;
-
 		}
-		i = longueur_wchart(argument, len);
+		i = longueur_wchart(len);
 		str[0] = (0xF0 << (4 - i)) | argument;
 	}
 	else
 		str[0] = (char)argument;
-	return(str);
+	tmp->leng += ft_strlen(str);
+	return (str);
 }
 
-
-void		is_char_extended(t_conv **tamp, wchar_t argument)
+void			is_char_extended(t_conv **tamp, wchar_t argument)
 {
-	t_conv	*tmp;
-	char *str;
-	int i;
-	int j;
+	t_conv		*tmp;
+	char		*str;
+	int			i;
 
 	tmp = *tamp;
 	i = 0;
-	str = conversion_C(&tmp, argument);
+	str = conversion_grand_c(&tmp, argument);
 	if (str != NULL)
 	{
 		if (tmp->largeur != 0 && tmp->largeur > tmp->precision
-			&& tmp->largeur > ft_strlen(str)) 
+			&& tmp->largeur > (int)ft_strlen(str))
 		{
 			longueur_de_champ(&tmp);
 			if (tmp->attributs[2] == 0)
 				i = ft_strlen(tmp->data) - ft_strlen(str);
 		}
 		else
-			tmp->data = (char*)malloc(sizeof(char) * (ft_strlen(str)));
+			tmp->data = ft_memalloc(ft_strlen(str));
 		precision_str(&tmp, str, i);
 	}
+	tmp->leng = ft_strlen(tmp->data);
+	if (argument == 0)
+		tmp->leng += 1;
 	ft_strdel(&str);
 }

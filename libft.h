@@ -92,8 +92,7 @@ int					ft_strchrint(char *str, char c);
 char				*ft_strjoinchar(char *str, char c);
 void				ft_putnbrendl(int n);
 char				*ft_strjoinfree(char *s1, const char *s2);
-char				*ft_strrev(char *str);
 char				*ft_itoa_base(int n, int base);
-int					ft_nbrlongu(long n, int base);
+int					ft_nbrlongu(int n, int base);
 
 #endif

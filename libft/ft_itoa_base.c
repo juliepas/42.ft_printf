@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa_base.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jpascal <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/08/10 18:15:40 by jpascal           #+#    #+#             */
+/*   Updated: 2017/08/10 18:15:42 by jpascal          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-int		ft_nbrlongu(int n, int base)
+int					ft_nbrlongue(long n, int base)
 {
-	int i;
+	int				i;
 
 	i = 0;
 	if (n == 0)
@@ -23,32 +35,25 @@ int		ft_nbrlongu(int n, int base)
 char				*ft_itoa_base(int n, int base)
 {
 	char			*str;
-	int	i;
-	int	nb;
+	int				i;
+	long int		nb;
 
 	nb = n;
-	i = ft_nbrlongu(nb, base);
-	if (base == 8)
-		i += 1;
-	if (!(str = (char*)malloc(sizeof(char) * (i + 1))))
-		return (0);
-	else if (nb < 0 && base == 10)
+	i = ft_nbrlongue(nb, base);
+	str = ft_memalloc(i);
+	if (nb < 0 && base == 10)
 	{
 		str[i - i] = '-';
 		nb = -nb;
 	}
 	str[i] = '\0';
-	i--;
 	if (nb == 0 || nb == -0)
-		str[i] = '0';
+		str[i - 1] = '0';
 	while (nb > 0)
 	{
-		if (nb % base <= 9)
-			str[i] = nb % base + '0';
-		else
-			str[i] = ((nb % base) - 10) + 'a';
+		str[--i] = (nb % base <= 9) ?
+		nb % base + '0' : ((nb % base) - 10) + 'a';
 		nb = nb / base;
-		i--;
 	}
 	return (str);
 }

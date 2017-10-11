@@ -19,14 +19,10 @@ char			*ft_strjoinchar(char *str, char c)
 
 	i = 0;
 	if (str == NULL)
-	{
-		if (!(tmp = (char*)malloc(sizeof(char) * 2)))
-			return (0);
-	}
+		tmp = ft_memalloc(2);
 	else
 	{
-		if (!(tmp = (char*)malloc(sizeof(char) * (ft_strlen(str) + 2))))
-			return (0);
+		tmp = ft_memalloc(ft_strlen(str) + 2);
 		while (str[i])
 		{
 			tmp[i] = str[i];
@@ -35,6 +31,7 @@ char			*ft_strjoinchar(char *str, char c)
 	}
 	tmp[i] = c;
 	tmp[i + 1] = '\0';
-	ft_strdel(&str);
+	if (str != NULL)
+		ft_strdel(&str);
 	return (tmp);
 }
